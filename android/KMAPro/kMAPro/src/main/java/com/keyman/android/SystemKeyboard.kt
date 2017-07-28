@@ -42,7 +42,7 @@ class SystemKeyboard : InputMethodService(), OnKeyboardEventListener {
     }
 
     override fun onDestroy() {
-        inputView = null
+        SystemKeyboard.inputView = null
         KMManager.removeKeyboardEventListener(this)
         interpreter = null // Throw it away, since we're losing our application's context.
         KMManager.onDestroy()
@@ -63,15 +63,16 @@ class SystemKeyboard : InputMethodService(), OnKeyboardEventListener {
      * is displayed, and every time it needs to be re-created such as due to
      * a configuration change.
      */
-    override fun onCreateInputView(): View {
+    override fun onCreateInputView(): View? {
         //Log.i("SystemKeyboard", "onCreateInputView");
         if (inputView == null) {
             inputView = KMManager.createInputView(this)
         }
 
-        val parent = inputView!!.parent as ViewGroup
-        parent?.removeView(inputView)
-
+        inputView?.let {
+            var parent = inputView!!.parent as ViewGroup
+            parent.removeView(inputView)
+        }
         return inputView
     }
 
@@ -177,7 +178,6 @@ class SystemKeyboard : InputMethodService(), OnKeyboardEventListener {
     }
 
     companion object {
-
         private var inputView: View? = null
         private var exText: ExtractedText? = null
     }

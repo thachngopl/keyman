@@ -8,6 +8,7 @@ import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream
 import java.io.IOException
+import java.io.InputStream
 import java.io.OutputStream
 import java.util.ArrayList
 import java.util.HashMap
@@ -122,21 +123,18 @@ class MainActivity : Activity(), OnKeyboardEventListener, OnKeyboardDownloadEven
                     if (filename.endsWith(".dat")) {
                         val newFile = File(getDir("userdata", Context.MODE_PRIVATE), filename)
                         copyFile(inputStream, newFile)
-                        inputStream.close()
                     } else if (filename.endsWith(".js")) {
                         val langDir = File(getDir("data", Context.MODE_PRIVATE).toString() + "/languages")
                         if (langDir.exists())
                             langDir.mkdir()
                         val newFile = File(langDir, filename)
                         copyFile(inputStream, newFile)
-                        inputStream.close()
                     } else if (filename.endsWith(".ttf") || filename.endsWith(".otf")) {
                         val fontDir = File(getDir("data", Context.MODE_PRIVATE).toString() + "/fonts")
                         if (fontDir.exists())
                             fontDir.mkdir()
                         val newFile = File(fontDir, filename)
                         copyFile(inputStream, newFile)
-                        inputStream.close()
                     }
                 } catch (e: Exception) {
                     didFail = true
@@ -545,9 +543,9 @@ class MainActivity : Activity(), OnKeyboardEventListener, OnKeyboardDownloadEven
             val kbVersion = keyboardInfo[KMManager.KMKey_KeyboardVersion]
             val kFont = keyboardInfo[KMManager.KMKey_Font]
             val kOskFont = keyboardInfo[KMManager.KMKey_OskFont]
-            if (languageID.contains(";")) {
+            if (languageID != null && languageID.contains(";")) {
                 val ids = languageID.split("\\;".toRegex()).dropLastWhile({ it.isEmpty() }).toTypedArray()
-                val names = languageName.split("\\;".toRegex()).dropLastWhile({ it.isEmpty() }).toTypedArray()
+                val names = languageName!!.split("\\;".toRegex()).dropLastWhile({ it.isEmpty() }).toTypedArray()
                 val len = ids.size
                 for (i in 0..len - 1) {
                     val langId = ids[i]
@@ -555,13 +553,13 @@ class MainActivity : Activity(), OnKeyboardEventListener, OnKeyboardDownloadEven
                     if (i < names.size)
                         langName = names[i]
                     val kbInfo = HashMap<String, String>()
-                    kbInfo.put(KMManager.KMKey_KeyboardID, keyboardID)
+                    kbInfo.put(KMManager.KMKey_KeyboardID, keyboardID as String)
                     kbInfo.put(KMManager.KMKey_LanguageID, langId)
-                    kbInfo.put(KMManager.KMKey_KeyboardName, keyboardName)
+                    kbInfo.put(KMManager.KMKey_KeyboardName, keyboardName as String)
                     kbInfo.put(KMManager.KMKey_LanguageName, langName)
-                    kbInfo.put(KMManager.KMKey_KeyboardVersion, kbVersion)
-                    kbInfo.put(KMManager.KMKey_Font, kFont)
-                    kbInfo.put(KMManager.KMKey_OskFont, kOskFont)
+                    kbInfo.put(KMManager.KMKey_KeyboardVersion, kbVersion as String)
+                    kbInfo.put(KMManager.KMKey_Font, kFont as String)
+                    kbInfo.put(KMManager.KMKey_OskFont, kOskFont as String)
                     if (i == 0) {
                         if (KMManager.addKeyboard(this, kbInfo)) {
                             KMManager.setKeyboard(keyboardID, langId, keyboardName, langName, kFont, kOskFont)
@@ -583,12 +581,10 @@ class MainActivity : Activity(), OnKeyboardEventListener, OnKeyboardDownloadEven
     @Throws(IOException::class)
     private fun copyFile(inStream: FileInputStream, dstFile: File) {
         val outStream = FileOutputStream(dstFile)
+        val bufferSize = 1024
 
-        val buffer = ByteArray(1024)
-        var len: Int
-        while ((len = inStream.read(buffer)) > 0) {
-            outStream.write(buffer, 0, len)
-        }
+        inStream.copyTo(outStream, bufferSize)
+        inStream.close()
         outStream.flush()
         outStream.close()
     }

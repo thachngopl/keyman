@@ -19,31 +19,23 @@
     </TextView>
 
     <LinearLayout
-        android:background="@drawable/com_facebook_list_section_header_background"
+        android:background="@drawable/com_facebook_button_send_icon_blue"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingTop="10dp"
         android:paddingBottom="10dp"
         android:gravity="center"
         android:orientation="horizontal" >
-            
-            <com.facebook.widget.LoginButton
-        		android:id="@+id/loginButton"
-        		android:layout_width="wrap_content"
-        		android:layout_height="wrap_content" />
-            
-			<Button
-        		android:id="@+id/shareButton"
-        		android:background="@drawable/com_facebook_button_blue"
-        		android:layout_width="wrap_content"
-        		android:minWidth="115dp"
-        		android:layout_height="wrap_content"
-        		android:layout_marginLeft="10dp"
-        		android:visibility="gone"
-        		android:text="@string/share"
-        		android:textSize="16sp"
-        		android:textStyle="bold"
-        		android:textColor="#ffffff" />
+
+        <com.facebook.login.widget.LoginButton
+            android:id="@+id/loginButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <com.facebook.share.widget.ShareButton
+            android:id="@+id/shareButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
             
     </LinearLayout>
 </LinearLayout>

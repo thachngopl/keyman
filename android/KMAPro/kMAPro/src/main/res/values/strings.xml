@@ -2,7 +2,6 @@
 <resources>
 
     <string name="app_name" translatable="false">Keyman</string>
-    <string name="app_id" translatable="false">603484883039253</string>
     <string name="action_settings" translatable="false">Settings</string>
     <string name="action_share" translatable="false">Share</string>
     <string name="action_web" translatable="false">Web Browser</string>
@@ -10,6 +9,7 @@
     <string name="action_overflow" translatable="false">More</string>
     <string name="action_clear_text" translatable="false">Clear Text</string>
     <string name="action_info" translatable="false">Info</string>
+    <string name="facebook_app_id" translatable="false">603484883039253</string>
     <string name="ic_text_size_up" translatable="false">Text size up</string>
     <string name="ic_text_size_down" translatable="false">Text size down</string>
     <string name="top_bar_line" translatable="false">Top bar line</string>

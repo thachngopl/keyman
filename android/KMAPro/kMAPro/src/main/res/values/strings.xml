@@ -30,7 +30,4 @@
     <string name="hint_title" translatable="false">Title</string>
     <string name="hint_url" translatable="false">Url</string>
 
-<!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-
 </resources>

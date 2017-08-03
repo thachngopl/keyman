@@ -44,7 +44,7 @@ public class GetStartedActivity extends Activity {
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
 
-    LoginButton loginButton = (LoginButton) findViewById(R.id.login_button);
+    //LoginButton loginButton = (LoginButton) findViewById(R.id.login_button);
 
     final Context context = this;
     requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);

@@ -10,9 +10,17 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
+import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
+import com.facebook.login.LoginResult;
+import com.facebook.login.widget.LoginButton;
+import com.facebook.share.ShareApi;
+import com.facebook.share.model.ShareContent;
 import com.facebook.share.model.ShareLinkContent;
 import com.facebook.share.widget.ShareDialog;
 import com.tavultesoft.kmea.KMManager;
@@ -48,8 +56,6 @@ import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.support.v4.view.MenuItemCompat;
-import android.support.v7.widget.ShareActionProvider;
 import android.text.Html;
 import android.util.Log;
 import android.util.TypedValue;
@@ -64,7 +70,7 @@ import android.widget.SeekBar;
 import android.widget.Toast;
 
 public class MainActivity extends Activity implements OnKeyboardEventListener, OnKeyboardDownloadEventListener {
-  private ShareActionProvider shareActionProvider;
+  CallbackManager callbackManager;
   private ShareDialog shareDialog;
 
   private KMTextView textView;
@@ -111,6 +117,7 @@ public class MainActivity extends Activity implements OnKeyboardEventListener, O
       checkGetStarted();
     }
 
+    callbackManager = CallbackManager.Factory.create();
     shareDialog = new ShareDialog(this);
   }
 
@@ -121,6 +128,8 @@ public class MainActivity extends Activity implements OnKeyboardEventListener, O
       checkGetStarted();
       return;
     } else {
+      //callbackManager.onActivityResult(requestCode, resultCode, returnIntent);
+
       boolean didFail = false;
       ClipData userdata = returnIntent.getClipData();
       int len = userdata.getItemCount();
@@ -222,8 +231,6 @@ public class MainActivity extends Activity implements OnKeyboardEventListener, O
     // Inflate the menu; this adds items to the action bar if it is present.
     getMenuInflater().inflate(R.menu.main, menu);
 
-    MenuItem item = menu.findItem(R.id.action_share);
-    shareActionProvider = (ShareActionProvider) MenuItemCompat.getActionProvider(item);
     return true;
   }
 
@@ -236,6 +243,8 @@ public class MainActivity extends Activity implements OnKeyboardEventListener, O
       case R.id.action_share:
         showShareDialog();
         return true;
+      case R.id.action_fb_share:
+        showFBShareDialog();
       case R.id.action_web:
         showWebBrowser();
         return true;
@@ -320,6 +329,8 @@ public class MainActivity extends Activity implements OnKeyboardEventListener, O
     overridePendingTransition(android.R.anim.fade_in, R.anim.hold);
   }
 
+  ///
+
   private void showShareDialog() {
     List<Intent> shareIntents = new ArrayList<Intent>();
     Intent intent = new Intent(Intent.ACTION_SEND);
@@ -327,8 +338,7 @@ public class MainActivity extends Activity implements OnKeyboardEventListener, O
     intent.putExtra(Intent.EXTRA_TEXT, textView.getText().toString());
 
     List<ResolveInfo> resInfo = getPackageManager().queryIntentActivities(intent, 0);
-    String fbPackageName = "com.facebook.katana";
-    boolean fbPackageIncluded = false;
+    final String[] FB_PACKAGE_NAMES = {"com.facebook.katana", "com.facebook.lite"};
 
     for (ResolveInfo resolveInfo : resInfo) {
       String packageName = resolveInfo.activityInfo.packageName.toLowerCase();
@@ -338,7 +348,8 @@ public class MainActivity extends Activity implements OnKeyboardEventListener, O
 
       String text = textView.getText().toString();
 
-      if (!packageName.equals(fbPackageName)) {
+      // Facebook API via SDK not done through intents
+      if (!Arrays.asList(FB_PACKAGE_NAMES).contains(packageName)) {
         if (packageName.equals("com.google.android.gm")) {
           // Html string for Gmail
           String htmlMailFormat = "<html><head></head><body>%s%s</body></html>";
@@ -359,38 +370,19 @@ public class MainActivity extends Activity implements OnKeyboardEventListener, O
       }
     }
 
-    // Add Facebook share separately via SDK
-    ShareLinkContent fbContent = new ShareLinkContent.Builder()
-      .setContentUrl(Uri.parse("https://keyman.com"))
-      .setQuote(textView.getText().toString())
-      .build();
-    ShareDialog shareDialog = new ShareDialog(this);
-    shareDialog.canShow(fbContent);
-
-    /*
-    if (!fbPackageIncluded) {
-      ShareDialog.show(this, textView.getText().toString());
-
-      Log.d("KMAPro", "FB not included, so adding");
-      Intent fbShareIntent = new Intent(this, FBShareActivity.class);
-      fbShareIntent.setType("text/plain");
-      fbShareIntent.setPackage(fbPackageName);
-      fbShareIntent.putExtra(Intent.EXTRA_TEXT, textView.getText().toString());
-      Log.d("KMAPro", "Orig # intents " + shareIntents.size());
-      shareIntents.add(new LabeledIntent(fbShareIntent, getPackageName(), "Facebook", R.drawable.ic_facebook_logo));
-      Log.d("KMAPro", "New # intents " + shareIntents.size());
-
-    }
-*/
     Intent chooserIntent = Intent.createChooser(shareIntents.remove(0), "Share via");
     chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, shareIntents.toArray(new Parcelable[]{}));
     startActivity(chooserIntent);
+  }
 
-    if (shareActionProvider != null) {
-      shareActionProvider.setShareIntent(chooserIntent);
-    }
-
-
+  private void showFBShareDialog() {
+    Log.d("KMAParo", "In FB Share Dialog");
+      Log.d("KMAPro", "Can share");
+      ShareContent fbContent = new ShareLinkContent.Builder()
+        .setQuote(textView.getText().toString())
+        .setContentUrl(Uri.parse("https://keyman.com"))
+        .build();
+      shareDialog.show(this, fbContent);
   }
 
   @SuppressLint("InflateParams")

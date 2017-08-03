@@ -19,23 +19,18 @@
     </TextView>
 
     <LinearLayout
-        android:background="@drawable/com_facebook_button_send_icon_blue"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="10dp"
-        android:paddingBottom="10dp"
+        android:background="@drawable/com_facebook_button_send_icon_blue"
         android:gravity="center"
-        android:orientation="horizontal" >
-
-        <com.facebook.login.widget.LoginButton
-            android:id="@+id/loginButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+        android:orientation="horizontal"
+        android:paddingBottom="10dp"
+        android:paddingTop="10dp">
 
         <com.facebook.share.widget.ShareButton
-            android:id="@+id/shareButton"
+            android:id="@+id/fb_share_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
-            
+
     </LinearLayout>
 </LinearLayout>

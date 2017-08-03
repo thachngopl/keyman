@@ -19,7 +19,8 @@ android {
         //dumpProperties(project.ext) // Use this to dump all external properties for debugging TeamCity integration
 
         if (project.hasProperty("build.number")) {
-            versionCode project.ext['build_counter'] as Integer // Because TeamCity does not bubble build.counter into system properties...
+            versionCode project.ext['build_counter'] as Integer
+            // Because TeamCity does not bubble build.counter into system properties...
             versionName "${project.ext['build.number']}"
         } else {
             versionCode 100
@@ -41,7 +42,7 @@ android {
     }
 
     buildTypes {
-         release {
+        release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
             if (project.hasProperty("release_store_file")) {
@@ -59,15 +60,15 @@ android {
     play {
         // Deactivate lower conflicting version APKs
         untrackOld = true
-        switch(System.env.TIER) {
-            case 'beta' :
+        switch (System.env.TIER) {
+            case 'beta':
                 track = 'beta'
                 break
 
-            case 'stable' :
+            case 'stable':
                 track = 'production'
                 break
-            
+
             default:
                 track = 'alpha'
         }
@@ -83,9 +84,9 @@ repositories {
 }
 
 dependencies {
+    compile(name: 'keyman-engine', ext: 'aar')
     compile 'com.facebook.android:facebook-android-sdk:[4,5)'
     compile 'com.android.support:support-v4:25.3.1'
-    compile(name: 'keyman-engine', ext: 'aar')
 }
 
 /*

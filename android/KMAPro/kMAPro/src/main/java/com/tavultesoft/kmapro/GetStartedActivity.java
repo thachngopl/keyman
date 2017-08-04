@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import com.facebook.login.widget.LoginButton;
 import com.tavultesoft.kmapro.R;
 import com.tavultesoft.kmea.KMManager;
 
@@ -43,8 +42,6 @@ public class GetStartedActivity extends Activity {
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-
-    //LoginButton loginButton = (LoginButton) findViewById(R.id.login_button);
 
     final Context context = this;
     requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
@@ -128,7 +125,6 @@ public class GetStartedActivity extends Activity {
         }
       }
     });
-
   }
 
   @Override

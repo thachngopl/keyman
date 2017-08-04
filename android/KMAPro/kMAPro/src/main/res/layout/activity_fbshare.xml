@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:facebook="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -18,19 +19,25 @@
         <requestFocus />
     </TextView>
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/com_facebook_button_send_icon_blue"
-        android:gravity="center"
-        android:orientation="horizontal"
+        android:paddingTop="10dp"
         android:paddingBottom="10dp"
-        android:paddingTop="10dp">
+        android:gravity="center"
+        android:orientation="horizontal" >
+
+        <com.facebook.login.widget.LoginButton
+            android:id="@+id/loginButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
 
         <com.facebook.share.widget.ShareButton
-            android:id="@+id/fb_share_button"
+            android:id="@+id/shareButton"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="11dp"
+            android:layout_toRightOf="@+id/loginButton"/>
 
-    </LinearLayout>
+    </RelativeLayout>
 </LinearLayout>
